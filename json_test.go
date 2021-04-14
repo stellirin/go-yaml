@@ -69,6 +69,20 @@ func TestYAMLToJSON(t *testing.T) {
 			},
 			want: []byte(`{"a":[{"b":"x1","c":"y1"},{"b":"x2","c":"y2"}]}`),
 		},
+		{
+			name: "template-map",
+			args: args{
+				data: []byte("a1: &t\n  b: x\n  c: y1\na2:\n  <<: *t\n  c: y2"),
+			},
+			want: []byte(`{"a1":{"b":"x","c":"y1"},"a2":{"b":"x","c":"y2"}}`),
+		},
+		{
+			name: "bad-format",
+			args: args{
+				data: []byte("a: nullTag\n b: null\n  b: null\n"),
+			},
+			wantErr: true,
+		},
 	}
 
 	for _, tt := range tests {

@@ -1,0 +1,6 @@
+# Go test binaries
+*.test
+
+# Code Coverage
+coverage.txt
+coverage.html

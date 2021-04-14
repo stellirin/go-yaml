@@ -43,8 +43,7 @@ func formatYAML(n *yaml.Node) error {
 	case yaml.DocumentNode:
 		// NOOP - Document doesn't need styling
 	case yaml.SequenceNode:
-		// n.Style = yaml.LiteralStyle
-		return fmt.Errorf("formatYAML: sequence node type not implemented")
+		n.Style = yaml.LiteralStyle
 	case yaml.MappingNode:
 		n.Style = yaml.LiteralStyle
 	case yaml.ScalarNode:

@@ -34,6 +34,13 @@ func TestYAMLToJSON(t *testing.T) {
 		{
 			name: "string",
 			args: args{
+				data: []byte("a: strTag\nb: \"x\"\n"),
+			},
+			want: []byte(`{"a":"strTag","b":"x"}`),
+		},
+		{
+			name: "int",
+			args: args{
 				data: []byte("a: strTag\nb: 1\n"),
 			},
 			want: []byte(`{"a":"strTag","b":1}`),

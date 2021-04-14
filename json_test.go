@@ -70,11 +70,18 @@ func TestYAMLToJSON(t *testing.T) {
 			want: []byte(`{"a":["b","c"]}`),
 		},
 		{
-			name: "map",
+			name: "map-string",
 			args: args{
 				data: []byte("a:\n- b: x1\n  c: y1\n- b: x2\n  c: y2\n"),
 			},
 			want: []byte(`{"a":[{"b":"x1","c":"y1"},{"b":"x2","c":"y2"}]}`),
+		},
+		{
+			name: "map-int",
+			args: args{
+				data: []byte("1:\n- b: x1\n  c: y1\n- b: x2\n  c: y2\n"),
+			},
+			want: []byte(`{"1":[{"b":"x1","c":"y1"},{"b":"x2","c":"y2"}]}`),
 		},
 		{
 			name: "template-map",

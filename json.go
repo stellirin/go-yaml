@@ -64,12 +64,21 @@ func convertSequenceNode(n []*yaml.Node) ([]interface{}, error) {
 }
 
 func convertMappingNode(n []*yaml.Node, m map[string]interface{}) error {
+	if len(n) <= 0 {
+		return nil
+	}
+
 	var a int
 	if n[0].Tag == "!!merge" {
 		a = 2
 		if err := convertMappingNode(n[1].Alias.Content, m); err != nil {
 			return err
 		}
+	}
+
+	// JSON allows only string keys
+	if n[a].Tag == "!!int" {
+		n[a].Tag = "!!str"
 	}
 
 	for c := a; c < len(n); c = c + 2 {

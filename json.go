@@ -76,12 +76,12 @@ func convertMappingNode(n []*yaml.Node, m map[string]interface{}) error {
 		}
 	}
 
-	// JSON allows only string keys
-	if n[a].Tag == "!!int" {
-		n[a].Tag = "!!str"
-	}
-
 	for c := a; c < len(n); c = c + 2 {
+		// JSON allows only string keys
+		if n[c].Tag == "!!int" {
+			n[c].Tag = "!!str"
+		}
+
 		k, err := convertNode(n[c])
 		if err != nil {
 			return err

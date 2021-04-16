@@ -9,6 +9,20 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const (
+	nullTag      = "!!null"
+	boolTag      = "!!bool"
+	strTag       = "!!str"
+	intTag       = "!!int"
+	floatTag     = "!!float"
+	timestampTag = "!!timestamp"
+	binaryTag    = "!!binary"
+
+	seqTag   = "!!seq"
+	mapTag   = "!!map"
+	mergeTag = "!!merge"
+)
+
 // YAMLToJSON converts YAML to JSON.
 func YAMLToJSON(data []byte) ([]byte, error) {
 	n := new(yaml.Node)
@@ -69,7 +83,7 @@ func convertMappingNode(n []*yaml.Node, m map[string]interface{}) error {
 	}
 
 	var a int
-	if n[0].Tag == "!!merge" {
+	if n[0].Tag == mergeTag {
 		a = 2
 		if err := convertMappingNode(n[1].Alias.Content, m); err != nil {
 			return err
@@ -78,8 +92,8 @@ func convertMappingNode(n []*yaml.Node, m map[string]interface{}) error {
 
 	for c := a; c < len(n); c = c + 2 {
 		// JSON allows only string keys
-		if n[c].Tag == "!!int" {
-			n[c].Tag = "!!str"
+		if n[c].Tag == boolTag || n[c].Tag == intTag || n[c].Tag == floatTag || n[c].Tag == timestampTag {
+			n[c].Tag = strTag
 		}
 
 		k, err := convertNode(n[c])
@@ -98,19 +112,19 @@ func convertMappingNode(n []*yaml.Node, m map[string]interface{}) error {
 
 func convertScalarNode(n *yaml.Node) (interface{}, error) {
 	switch n.Tag {
-	case "!!null":
+	case nullTag:
 		return nil, nil
-	case "!!bool":
+	case boolTag:
 		return strconv.ParseBool(n.Value)
-	case "!!str":
+	case strTag:
 		return n.Value, nil
-	case "!!int":
+	case intTag:
 		return strconv.Atoi(n.Value)
-	case "!!float":
+	case floatTag:
 		return strconv.ParseFloat(n.Value, 32)
-	case "!!timestamp":
+	case timestampTag:
 		return time.Parse(time.RFC3339, n.Value)
-	case "!!binary":
+	case binaryTag:
 		return nil, fmt.Errorf("'!!binary' node tag not (yet) implemented in scalar node type")
 	default:
 		return nil, fmt.Errorf("'%s' tag should not be processed as a scalar node type", n.Tag)

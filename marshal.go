@@ -16,8 +16,8 @@ var defaultOptions = Options{
 }
 
 // Marshal converts an object into YAML, via an intermediate marshal to JSON.
-func Marshal(o interface{}) ([]byte, error) {
-	j, err := json.Marshal(o)
+func Marshal(obj interface{}) ([]byte, error) {
+	j, err := json.Marshal(obj)
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling into JSON: %v", err)
 	}
@@ -30,16 +30,23 @@ func Marshal(o interface{}) ([]byte, error) {
 	return y, nil
 }
 
+// JSONOpt is a decoding option for decoding from JSON format.
+type JSONOpt func(*json.Decoder) *json.Decoder
+
 // Unmarshal converts YAML to an object, via an intermediate marshal to JSON.
-func Unmarshal(y []byte, o interface{}) error {
-	j, err := YAMLToJSON(y)
+func Unmarshal(data []byte, obj interface{}, opts ...JSONOpt) error {
+	j, err := YAMLToJSON(data)
 	if err != nil {
 		return fmt.Errorf("error converting YAML to JSON: %v", err)
 	}
 
 	r := bytes.NewReader(j)
 	d := json.NewDecoder(r)
-	if err := d.Decode(&o); err != nil {
+	for _, opt := range opts {
+		d = opt(d)
+	}
+
+	if err := d.Decode(&obj); err != nil {
 		return fmt.Errorf("error while decoding JSON: %v", err)
 	}
 

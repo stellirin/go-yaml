@@ -7,17 +7,6 @@ import (
 	. "czechia.dev/yaml"
 )
 
-type args struct {
-	data []byte
-}
-
-type test struct {
-	name    string
-	args    args
-	want    []byte
-	wantErr bool
-}
-
 func TestYAMLToJSON(t *testing.T) {
 
 	t.Run("null", func(t *testing.T) {
@@ -100,6 +89,17 @@ func TestYAMLToJSON(t *testing.T) {
 		})
 	})
 
+	t.Run("map-bool", func(t *testing.T) {
+		t.Parallel()
+		testYAMLToJSON(t, test{
+			name: "map-bool",
+			args: args{
+				data: []byte("true:\n- b: x1\n  c: y1\n- b: x2\n  c: y2\n"),
+			},
+			want: []byte(`{"true":[{"b":"x1","c":"y1"},{"b":"x2","c":"y2"}]}`),
+		})
+	})
+
 	t.Run("map-string", func(t *testing.T) {
 		t.Parallel()
 		testYAMLToJSON(t, test{
@@ -119,6 +119,28 @@ func TestYAMLToJSON(t *testing.T) {
 				data: []byte("1:\n- b: x1\n  c: y1\n- b: x2\n  c: y2\n"),
 			},
 			want: []byte(`{"1":[{"b":"x1","c":"y1"},{"b":"x2","c":"y2"}]}`),
+		})
+	})
+
+	t.Run("map-float", func(t *testing.T) {
+		t.Parallel()
+		testYAMLToJSON(t, test{
+			name: "map-float",
+			args: args{
+				data: []byte("3.4028235e+38:\n- b: x1\n  c: y1\n- b: x2\n  c: y2\n"),
+			},
+			want: []byte(`{"3.4028235e+38":[{"b":"x1","c":"y1"},{"b":"x2","c":"y2"}]}`),
+		})
+	})
+
+	t.Run("map-timestamp", func(t *testing.T) {
+		t.Parallel()
+		testYAMLToJSON(t, test{
+			name: "map-int",
+			args: args{
+				data: []byte("2001-12-15T02:59:43.1Z:\n- b: x1\n  c: y1\n- b: x2\n  c: y2\n"),
+			},
+			want: []byte(`{"2001-12-15T02:59:43.1Z":[{"b":"x1","c":"y1"},{"b":"x2","c":"y2"}]}`),
 		})
 	})
 

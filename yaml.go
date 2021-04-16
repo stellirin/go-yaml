@@ -7,13 +7,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// JSONToYAML Converts JSON to YAML.
-func JSONToYAML(data []byte, opts ...Options) ([]byte, error) {
-	o := defaultOptions
-	if len(opts) > 0 {
-		o = opts[0]
-	}
+// Indent is the default YAML indent for this package.
+// yaml.v3 defaults to 4 but industry standard is 2.
+var Indent = 2
 
+// JSONToYAML Converts JSON to YAML.
+func JSONToYAML(data []byte) ([]byte, error) {
 	n := new(yaml.Node)
 	if err := yaml.Unmarshal(data, n); err != nil {
 		return nil, err
@@ -25,7 +24,7 @@ func JSONToYAML(data []byte, opts ...Options) ([]byte, error) {
 
 	buf := new(bytes.Buffer)
 	enc := yaml.NewEncoder(buf)
-	enc.SetIndent(o.Indent)
+	enc.SetIndent(Indent)
 
 	if err := enc.Encode(n); err != nil {
 		return nil, fmt.Errorf("marshal formated: %w", err)

@@ -6,15 +6,6 @@ import (
 	"fmt"
 )
 
-type Options struct {
-	Indent int
-}
-
-// default indent for yaml.v3 is 4 but industry standard is 2.
-var defaultOptions = Options{
-	Indent: 2,
-}
-
 // Marshal converts an object into YAML, via an intermediate marshal to JSON.
 func Marshal(obj interface{}) ([]byte, error) {
 	j, err := json.Marshal(obj)
@@ -51,4 +42,19 @@ func Unmarshal(data []byte, obj interface{}, opts ...JSONOpt) error {
 	}
 
 	return nil
+}
+
+// DisallowUnknownFields causes the Decoder to return an error when the destination
+//is a struct and the input contains object keys which do not match any non-ignored,
+// exported fields in the destination.
+func DisallowUnknownFields(d *json.Decoder) *json.Decoder {
+	d.DisallowUnknownFields()
+	return d
+}
+
+// UseNumber causes the Decoder to unmarshal a number into an interface{} as a
+// Number instead of as a float64.
+func UseNumber(d *json.Decoder) *json.Decoder {
+	d.UseNumber()
+	return d
 }

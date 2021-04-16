@@ -72,9 +72,9 @@ func TestYAMLToJSON(t *testing.T) {
 		testYAMLToJSON(t, test{
 			name: "timestamp",
 			args: args{
-				data: []byte("a: timestampTag\nb: 2001-12-15T02:59:43.1Z\n"),
+				data: []byte("a: timestampTag\nb: 2001-02-03T04:05:06.07Z\n"),
 			},
-			want: []byte(`{"a":"timestampTag","b":"2001-12-15T02:59:43.1Z"}`),
+			want: []byte(`{"a":"timestampTag","b":"2001-02-03T04:05:06.07Z"}`),
 		})
 	})
 
@@ -138,9 +138,9 @@ func TestYAMLToJSON(t *testing.T) {
 		testYAMLToJSON(t, test{
 			name: "map-int",
 			args: args{
-				data: []byte("2001-12-15T02:59:43.1Z:\n- b: x1\n  c: y1\n- b: x2\n  c: y2\n"),
+				data: []byte("2001-02-03T04:05:06.07Z:\n- b: x1\n  c: y1\n- b: x2\n  c: y2\n"),
 			},
-			want: []byte(`{"2001-12-15T02:59:43.1Z":[{"b":"x1","c":"y1"},{"b":"x2","c":"y2"}]}`),
+			want: []byte(`{"2001-02-03T04:05:06.07Z":[{"b":"x1","c":"y1"},{"b":"x2","c":"y2"}]}`),
 		})
 	})
 

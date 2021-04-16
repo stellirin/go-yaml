@@ -3,12 +3,18 @@ package yaml_test
 import (
 	"reflect"
 	"testing"
+	"time"
 
 	. "czechia.dev/yaml"
 )
 
 type Object struct {
-	A string `json:"a"`
+	A *Object   `json:"a"`
+	B bool      `json:"b"`
+	C string    `json:"c"`
+	D int       `json:"d"`
+	E float32   `json:"e"`
+	F time.Time `json:"f"`
 }
 
 type args struct {
@@ -24,6 +30,8 @@ type test struct {
 	wantErr bool
 }
 
+var testTime, _ = time.Parse(time.RFC3339, "2001-02-03T04:05:06.07Z")
+
 func TestMarshal(t *testing.T) {
 
 	t.Run("obj", func(t *testing.T) {
@@ -32,10 +40,15 @@ func TestMarshal(t *testing.T) {
 			name: "obj",
 			args: args{
 				obj: Object{
-					A: "x",
+					A: nil,
+					B: true,
+					C: "x",
+					D: 42,
+					E: 3.14159,
+					F: testTime,
 				},
 			},
-			want: []byte("a: x\n"),
+			want: []byte("a: null\nb: true\nc: x\nd: 42\ne: 3.14159\nf: \"2001-02-03T04:05:06.07Z\"\n"),
 		})
 	})
 
@@ -48,9 +61,9 @@ func TestUnmarshal(t *testing.T) {
 		testUnmarshal(t, test{
 			name: "obj",
 			args: args{
-				data: []byte("a: x\n"),
+				data: []byte("a: null\nb: true\nc: x\nd: 42\ne: 3.14159\nf: \"2001-02-03T04:05:06.07Z\"\n"),
 			},
-			wantObj: Object{A: "x"},
+			wantObj: Object{A: nil, B: true, C: "x", D: 42, E: 3.14159, F: testTime},
 		})
 	})
 
@@ -59,7 +72,7 @@ func TestUnmarshal(t *testing.T) {
 		testUnmarshal(t, test{
 			name: "obj-bad",
 			args: args{
-				data: []byte("a: 1\n"),
+				data: []byte("f: \"time\"\n"),
 			},
 			wantErr: true,
 		})

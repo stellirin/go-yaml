@@ -69,9 +69,9 @@ func TestJSONToYAML(t *testing.T) {
 		testJSONToYAML(t, test{
 			name: "timestamp",
 			args: args{
-				data: []byte(`{"a":"2001-12-15T02:59:43.1Z"}`),
+				data: []byte(`{"a":"2001-02-03T04:05:06.07Z"}`),
 			},
-			want: []byte("a: \"2001-12-15T02:59:43.1Z\"\n"),
+			want: []byte("a: \"2001-02-03T04:05:06.07Z\"\n"),
 		})
 	})
 

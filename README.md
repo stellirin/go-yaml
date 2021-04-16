@@ -1,43 +1,43 @@
-# YAML marshaling and unmarshaling support for Go
+# YAML 1.2 marshaling and unmarshaling support for Go
 
 [![codecov](https://codecov.io/gh/stellirin/yaml/branch/main/graph/badge.svg?token=xwCvmbEci4)](https://codecov.io/gh/stellirin/yaml)
 [![Test Action Status](https://github.com/stellirin/yaml/workflows/Go/badge.svg)](https://github.com/stellirin/yaml/actions?query=workflow%3AGo)
 
-## Introduction
+A simple package to marshal and unmarshal YAML 1.2 in Go.
 
-A wrapper around [yaml.v3](https://github.com/go-yaml/yaml/tree/v3) designed to enable a better way of handling YAML when marshaling to and from structs.
+## ⚙️ Installation
 
-In short, this library first converts YAML to JSON using yaml.v3 and then uses `json.Marshal` and `json.Unmarshal` to convert to or from the struct. This means that it effectively reuses the JSON struct tags as well as the custom JSON methods `MarshalJSON` and `UnmarshalJSON`, unlike yaml.v3. For a detailed overview of the rationale behind this method, [see this blog post](http://web.archive.org/web/20190603050330/http://ghodss.com/2014/the-right-way-to-handle-yaml-in-golang/).
+```sh
+go get -u czechia.dev/yaml
+```
 
-## Compatibility
+## 📝 Introduction
+
+This package is a rewrite of [github.com/ghodss/yaml](https://github.com/ghodss/yaml) using the new `yaml.Node` API in [yaml.v3](https://github.com/go-yaml/yaml/tree/v3). The API of *this* package is the same as ghodss/yaml so you can use it as a drop-in replacement wherever ghodss/yaml is used.
+
+The original library was designed to enable a better way of handling YAML when marshaling to and from structs.
+
+This library first converts YAML to JSON using yaml.v3 and then uses `json.Unmarshal` to convert to the desired struct. This means that it uses the same JSON struct tags as well as the custom JSON methods `MarshalJSON` and `UnmarshalJSON`.
+
+For a detailed overview of the reasoning behind this method, [see this archived blog post](http://web.archive.org/web/20190603050330/http://ghodss.com/2014/the-right-way-to-handle-yaml-in-golang/).
+
+## 👍 Compatibility
 
 This package uses [yaml.v3](https://github.com/go-yaml/yaml/tree/v3) and therefore supports [everything yaml.v3 supports](https://github.com/go-yaml/yaml/tree/v3#compatibility).
 
-## Caveats
+The most noticable difference between yaml.v2 and yaml.v3 (or rather the YAML 1.1 and YAML 1.2 specifications) is around booleans. Specifically only variants of `true` and `false` are booleans, so `y` is now treated as a string.
 
-**Caveat #1:** When using `yaml.Marshal` and `yaml.Unmarshal`, binary data should NOT be preceded with the `!!binary` YAML tag. If you do, go-yaml will convert the binary data from base64 to native binary data, which is not compatible with JSON. You can still use binary in your YAML files though - just store them without the `!!binary` tag and decode the base64 in your code (e.g. in the custom JSON methods `MarshalJSON` and `UnmarshalJSON`). This also has the benefit that your YAML and your JSON binary data will be decoded exactly the same way. As an example:
 
-```yaml
-BAD:
-  exampleKey: !!binary gIGC
 
-GOOD:
-  exampleKey: gIGC
-```
+## ⛔️ Caveats
 
-... and decode the base64 data in your code.
+**Caveat #1:**  When using `yaml.Marshal` and `yaml.Unmarshal`, binary data should **NOT** be preceded with the `!!binary` YAML tag. If you do, yaml.v3 will convert the binary data from base64 to native binary data, which is not compatible with JSON. You can still use binary in your YAML files - just store them without the `!!binary` tag and decode the base64 in your code (e.g. in the custom JSON methods `MarshalJSON` and `UnmarshalJSON`). This has the benefit that binary data will be decoded exactly the same way for both YAML and JSON.
 
 **Caveat #2:** When using `YAMLToJSON` directly, maps with keys that are maps will result in an error since this is not supported by JSON. This error will occur in `Unmarshal` as well since you can't unmarshal map keys anyways since struct fields can't be keys.
 
-## Installation and usage
+## 💻 Usage
 
-To install, run:
-
-```sh
-go get czechia.dev/yaml
-```
-
-And import using:
+Import using:
 
 ```go
 import "czechia.dev/yaml"
@@ -69,8 +69,8 @@ func main() {
 	}
 	fmt.Println(string(y))
 	/* Output:
-	age: 30
 	name: John
+	age: 30
 	*/
 
 	// Unmarshal the YAML back into a Person struct.
@@ -87,7 +87,7 @@ func main() {
 }
 ```
 
-`yaml.YAMLToJSON` and `yaml.JSONToYAML` methods are also available:
+The intermediate `yaml.YAMLToJSON` and `yaml.JSONToYAML` methods are also available:
 
 ```go
 package main

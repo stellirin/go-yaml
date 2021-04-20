@@ -2,6 +2,7 @@
 
 [![coverage](https://codecov.io/gh/stellirin/go-yaml/branch/main/graph/badge.svg?token=16jEi8Qbct)](https://codecov.io/gh/stellirin/go-yaml)
 [![tests](https://github.com/stellirin/go-yaml/workflows/Go/badge.svg)](https://github.com/stellirin/go-yaml/actions?query=workflow%3AGo)
+[![report](https://goreportcard.com/badge/czechia.dev/yaml)](https://goreportcard.com/report/czechia.dev/yaml)
 
 A simple package to marshal and unmarshal YAML 1.2 in Go.
 

@@ -1,8 +1,9 @@
 # YAML 1.2 marshaling and unmarshaling support for Go
 
-[![coverage](https://codecov.io/gh/stellirin/go-yaml/branch/main/graph/badge.svg?token=16jEi8Qbct)](https://codecov.io/gh/stellirin/go-yaml)
-[![tests](https://github.com/stellirin/go-yaml/workflows/Go/badge.svg)](https://github.com/stellirin/go-yaml/actions?query=workflow%3AGo)
+[![reference](https://pkg.go.dev/badge/czechia.dev/yaml.svg)](https://pkg.go.dev/czechia.dev/yaml)
 [![report](https://goreportcard.com/badge/czechia.dev/yaml)](https://goreportcard.com/report/czechia.dev/yaml)
+[![tests](https://github.com/stellirin/go-yaml/workflows/Go/badge.svg)](https://github.com/stellirin/go-yaml/actions?query=workflow%3AGo)
+[![coverage](https://codecov.io/gh/stellirin/go-yaml/branch/main/graph/badge.svg?token=16jEi8Qbct)](https://codecov.io/gh/stellirin/go-yaml)
 
 A simple package to marshal and unmarshal YAML 1.2 in Go.
 
